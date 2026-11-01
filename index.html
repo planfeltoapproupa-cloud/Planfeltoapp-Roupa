@@ -1,0 +1,1780 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gerador de Panfleto - Cores Reais</title>
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#ff3b30">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Panfleto">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<style>
+:root {
+--primary: #ff3b30;
+--dark: #cc3128;
+--light: #f8f9fa;
+--bg: #ffffff;
+--text: #1c1c1e;
+--border: #e0e0e0;
+--card: #ffffff;
+--success: #34c759;
+--warning: #ff9500;
+--info: #007aff;
+--footer-bg: #1c1c1e;
+--dark-bg: #121212;
+--dark-card: #1e1e1e;
+--dark-text: #f5f5f7;
+--dark-border: #3a3a3c;
+}
+
+[data-theme="dark"] {
+--bg: var(--dark-bg);
+--card: var(--dark-card);
+--text: var(--dark-text);
+--border: var(--dark-border);
+--footer-bg: #000000;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+background: linear-gradient(135deg, #f9f9f9 0%, #e8e8e8 100%);
+color: var(--text);
+padding: 15px;
+min-height: 100vh;
+transition: background 0.3s ease, color 0.3s ease;
+}
+
+[data-theme="dark"] body {
+background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+}
+
+.app-container {
+max-width: 480px;
+margin: 0 auto;
+background: var(--card);
+border-radius: 28px;
+box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+padding: 24px;
+position: relative;
+border: 1px solid var(--border);
+transition: background 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+[data-theme="dark"] .app-container {
+box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+}
+
+header {
+text-align: center;
+margin-bottom: 25px;
+position: relative;
+padding-top: 5px;
+}
+
+/* ✅ BOTÃO POSICIONADO ACIMA DO TÍTULO - AJUSTADO PARA FICAR MAIS PRÓXIMO */
+.theme-toggle-container {
+position: absolute;
+top: -32px; /* ✅ AJUSTADO: -45px → -32px (mais próximo do título) */
+right: 10px;
+width: 44px;
+height: 44px;
+border-radius: 50%;
+background: linear-gradient(135deg, #ff3b30 0%, #cc3128 100%);
+color: white;
+border: none;
+cursor: pointer;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 20px;
+box-shadow: 0 4px 12px rgba(255, 59, 48, 0.4);
+transition: all 0.3s ease;
+z-index: 10;
+}
+
+.theme-toggle-container:hover {
+transform: scale(1.1);
+box-shadow: 0 6px 18px rgba(255, 59, 48, 0.6);
+}
+
+.theme-toggle-container::before {
+content: "🌙";
+font-size: 18px;
+}
+
+[data-theme="dark"] .theme-toggle-container::before {
+content: "☀️";
+}
+
+header h1 {
+font-size: 30px;
+font-weight: 800;
+color: var(--primary);
+margin: 10px 0;
+letter-spacing: -0.5px;
+}
+
+header p {
+  color: var(--text);
+  font-size: 16px;
+  margin-top: 5px;
+  font-weight: 500;
+  opacity: 0.9;
+}
+
+/* Logo / Foto da Loja (área principal do topo) */
+.logo-section {
+  margin: 10px 0 8px;
+  text-align: center;
+}
+
+.logo-upload-area {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 220px;
+  min-height: 120px;
+  padding: 18px 24px;
+  border: 2px dashed var(--border);
+  border-radius: 20px;
+  background: #f9f9f9;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+[data-theme="dark"] .logo-upload-area {
+  background: #2a2a2a;
+  border-color: var(--dark-border);
+}
+
+.logo-upload-area:hover {
+  border-color: var(--primary);
+  background: rgba(255, 59, 48, 0.06);
+  transform: scale(1.02);
+}
+
+.logo-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #888;
+  gap: 2px;
+}
+
+[data-theme="dark"] .logo-placeholder {
+  color: #aaa;
+}
+
+
+.category-section {
+  margin-bottom: 22px;
+}
+
+
+.category-header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 14px;
+}
+
+.category-label {
+font-weight: 700;
+font-size: 16px;
+color: var(--text);
+}
+
+.see-more {
+color: var(--primary);
+font-size: 14px;
+cursor: pointer;
+font-weight: 600;
+}
+
+.category-grid {
+display: grid;
+grid-template-columns: repeat(4, 1fr);
+gap: 11px;
+max-height: 170px;
+overflow-y: auto;
+padding-right: 4px;
+}
+
+.category-grid::-webkit-scrollbar {
+width: 5px;
+}
+
+.category-grid::-webkit-scrollbar-track {
+background: #f1f1f1;
+border-radius: 10px;
+}
+
+[data-theme="dark"] .category-grid::-webkit-scrollbar-track {
+background: #2a2a2a;
+}
+
+.category-grid::-webkit-scrollbar-thumb {
+background: var(--primary);
+border-radius: 10px;
+}
+
+.category-btn {
+padding: 11px 4px;
+border: 2px solid var(--border);
+border-radius: 14px;
+background: #f9f9f9;
+font-weight: 700;
+font-size: 12px;
+cursor: pointer;
+transition: all 0.25s;
+text-align: center;
+color: var(--text);
+white-space: nowrap;
+overflow: hidden;
+text-overflow: ellipsis;
+line-height: 1.3;
+}
+
+[data-theme="dark"] .category-btn {
+background: #2a2a2a;
+border-color: var(--dark-border);
+}
+
+.category-btn:hover {
+border-color: var(--primary);
+background: rgba(255, 59, 48, 0.08);
+transform: scale(1.03);
+}
+
+[data-theme="dark"] .category-btn:hover {
+background: rgba(255, 59, 48, 0.2);
+}
+
+.category-btn.active {
+border-color: var(--primary);
+background: rgba(255, 59, 48, 0.15);
+box-shadow: 0 3px 10px rgba(255, 59, 48, 0.25);
+color: var(--primary);
+font-weight: 800;
+}
+
+[data-theme="dark"] .category-btn.active {
+background: rgba(255, 59, 48, 0.3);
+}
+
+.photo-container {
+width: 100%;
+height: 270px;
+background: linear-gradient(135deg, #f9f9f9 0%, #eaeaea 100%);
+border-radius: 22px;
+border: 3px dashed #d1d1d1;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+margin-bottom: 22px;
+position: relative;
+overflow: hidden;
+cursor: pointer;
+transition: all 0.3s ease;
+}
+
+[data-theme="dark"] .photo-container {
+background: linear-gradient(135deg, #2a2a2a 0%, #1e1e1e 100%);
+border-color: #4a4a4a;
+}
+
+.photo-container:hover {
+border-color: var(--primary);
+background: #fff5f5;
+transform: scale(1.01);
+}
+
+[data-theme="dark"] .photo-container:hover {
+background: #2a1a1a;
+border-color: var(--primary);
+}
+
+.photo-container img {
+width: 100%;
+height: 100%;
+object-fit: cover;
+display: none;
+}
+
+.photo-placeholder {
+text-align: center;
+color: #888;
+}
+
+[data-theme="dark"] .photo-placeholder {
+color: #aaa;
+}
+
+.photo-placeholder svg {
+width: 65px;
+height: 65px;
+margin-bottom: 16px;
+color: #b0b0b0;
+}
+
+[data-theme="dark"] .photo-placeholder svg {
+color: #777;
+}
+
+.photo-placeholder p {
+font-weight: 700;
+font-size: 17px;
+color: var(--text);
+}
+
+.photo-placeholder small {
+color: #999;
+font-size: 14px;
+margin-top: 6px;
+display: block;
+}
+
+[data-theme="dark"] .photo-placeholder small {
+color: #888;
+}
+
+.form-group {
+margin-bottom: 20px;
+}
+
+label {
+display: block;
+font-weight: 700;
+margin-bottom: 10px;
+font-size: 16px;
+display: flex;
+align-items: center;
+gap: 8px;
+color: var(--text);
+}
+
+label.required::after {
+content: "*";
+color: var(--primary);
+margin-left: 4px;
+}
+
+input, select, textarea {
+width: 100%;
+padding: 18px;
+border: 2px solid var(--border);
+border-radius: 18px;
+font-size: 18px;
+background: #f9f9f9;
+transition: all 0.3s;
+font-family: inherit;
+color: var(--text);
+}
+
+[data-theme="dark"] input,
+[data-theme="dark"] select,
+[data-theme="dark"] textarea {
+background: #2a2a2a;
+border-color: var(--dark-border);
+color: var(--dark-text);
+}
+
+input:focus, select:focus, textarea:focus {
+outline: none;
+border-color: var(--primary);
+background: white;
+box-shadow: 0 0 0 4px rgba(255, 59, 48, 0.15);
+}
+
+[data-theme="dark"] input:focus,
+[data-theme="dark"] select:focus,
+[data-theme="dark"] textarea:focus {
+background: #333;
+box-shadow: 0 0 0 4px rgba(255, 59, 48, 0.3);
+}
+
+input::placeholder, textarea::placeholder {
+color: #a5a5a5;
+}
+
+[data-theme="dark"] input::placeholder,
+[data-theme="dark"] textarea::placeholder {
+color: #777;
+}
+
+.btn-primary {
+background: linear-gradient(135deg, var(--primary) 0%, var(--dark) 100%);
+color: white;
+width: 100%;
+padding: 20px;
+border: none;
+border-radius: 20px;
+font-size: 19px;
+font-weight: 800;
+cursor: pointer;
+transition: all 0.3s;
+box-shadow: 0 8px 22px rgba(255, 59, 48, 0.45);
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 12px;
+margin-top: 8px;
+letter-spacing: -0.5px;
+}
+
+.btn-primary:hover {
+transform: translateY(-4px);
+box-shadow: 0 10px 28px rgba(255, 59, 48, 0.55);
+}
+
+.btn-secondary {
+background: linear-gradient(135deg, #ff9500 0%, #e68600 100%);
+color: white;
+width: 100%;
+padding: 17px;
+border: none;
+border-radius: 18px;
+font-size: 17px;
+font-weight: 800;
+cursor: pointer;
+transition: all 0.3s;
+box-shadow: 0 6px 18px rgba(255, 149, 0, 0.4);
+margin-top: 12px;
+}
+
+.btn-secondary:hover {
+transform: translateY(-3px);
+box-shadow: 0 8px 24px rgba(255, 149, 0, 0.5);
+}
+
+.preview-container {
+background: var(--card);
+border-radius: 24px;
+overflow: hidden;
+box-shadow: 0 12px 35px rgba(0,0,0,0.22);
+margin: 28px 0;
+display: none;
+position: relative;
+width: 100%;
+aspect-ratio: 9/16;
+max-height: 520px;
+border: 4px solid #fff;
+transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+[data-theme="dark"] .preview-container {
+box-shadow: 0 12px 35px rgba(0,0,0,0.5);
+border-color: #333;
+}
+
+.preview-container.active {
+display: block;
+animation: fadeIn 0.45s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@keyframes fadeIn {
+from { opacity: 0; transform: translateY(15px); }
+to { opacity: 1; transform: translateY(0); }
+}
+
+.preview-image {
+width: 100%;
+height: 320px;
+background: #f5f5f5;
+position: relative;
+overflow: hidden;
+}
+
+[data-theme="dark"] .preview-image {
+background: #2a2a2a;
+}
+
+.preview-image img {
+width: 100%;
+height: 100%;
+object-fit: cover;
+}
+
+.preview-price {
+position: absolute;
+bottom: 22px;
+left: 22px;
+background: rgba(0,0,0,0.88);
+color: white;
+padding: 16px 28px;
+border-radius: 22px;
+font-weight: 800;
+font-size: 28px;
+z-index: 10;
+border: 3px solid rgba(255,255,255,0.15);
+}
+
+.preview-desc {
+padding: 26px;
+font-size: 18px;
+line-height: 1.65;
+color: var(--text);
+background: #f9f9f9;
+min-height: 160px;
+white-space: pre-line;
+font-weight: 600;
+letter-spacing: -0.3px;
+}
+
+[data-theme="dark"] .preview-desc {
+background: #2a2a2a;
+color: var(--dark-text);
+}
+
+.preview-footer {
+padding: 22px 20px;
+text-align: center;
+background: var(--footer-bg);
+color: white;
+font-weight: 800;
+font-size: 20px;
+line-height: 1.4;
+}
+
+.share-section {
+  display: none;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.share-section.active {
+  display: grid;
+}
+
+
+.share-btn {
+padding: 18px;
+border-radius: 18px;
+font-weight: 800;
+font-size: 16px;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+gap: 10px;
+border: none;
+cursor: pointer;
+transition: all 0.3s;
+box-shadow: 0 5px 15px rgba(0,0,0,0.12);
+letter-spacing: -0.3px;
+}
+
+[data-theme="dark"] .share-btn {
+box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.share-btn:hover {
+transform: translateY(-3px);
+box-shadow: 0 8px 22px rgba(0,0,0,0.2);
+}
+
+[data-theme="dark"] .share-btn:hover {
+box-shadow: 0 8px 22px rgba(0,0,0,0.4);
+}
+
+.whatsapp {
+background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+color: white;
+}
+
+.instagram {
+background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+color: white;
+}
+
+.facebook {
+background: linear-gradient(135deg, #1877F2 0%, #4267B2 100%);
+color: white;
+}
+
+.download {
+background: linear-gradient(135deg, #007aff 0%, #0051e0 100%);
+color: white;
+}
+
+.whatsapp-float {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 72px;
+  height: 72px;
+  background: #25D366;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 25px rgba(37, 211, 102, 0.7);
+  text-decoration: none;
+  z-index: 9999;
+  animation: pulse 2s infinite;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.whatsapp-float:hover {
+  transform: scale(1.08);
+  box-shadow: 0 8px 30px rgba(37, 211, 102, 0.85);
+}
+
+.whatsapp-float svg {
+  width: 38px;
+  height: 38px;
+  fill: white;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.8); }
+  70% { box-shadow: 0 0 0 14px rgba(37, 211, 102, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+}
+
+
+.app-footer {
+text-align: center;
+color: #888;
+font-size: 14px;
+margin-top: 32px;
+padding-top: 18px;
+border-top: 1px solid var(--border);
+line-height: 1.5;
+transition: color 0.3s ease, border-color 0.3s ease;
+}
+
+[data-theme="dark"] .app-footer {
+color: #777;
+border-color: var(--dark-border);
+}
+
+.highlight {
+color: var(--primary);
+font-weight: 700;
+}
+
+.settings-box {
+  margin: 14px auto 0;
+  max-width: 360px;
+  text-align: left;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 10px 14px;
+  background: var(--card);
+}
+.settings-box summary {
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--text);
+  list-style: none;
+}
+.settings-box summary::-webkit-details-marker { display: none; }
+.settings-box .form-group { margin: 12px 0 4px; }
+.settings-box label { font-size: 14px; margin-bottom: 6px; }
+.settings-box input { padding: 12px 14px; font-size: 16px; border-radius: 12px; }
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 120px;
+  transform: translateX(-50%) translateY(20px);
+  background: rgba(28,28,30,0.95);
+  color: #fff;
+  padding: 12px 18px;
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 600;
+  max-width: 88vw;
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  z-index: 10000;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+.install-btn {
+  display: none;
+  margin-top: 10px;
+  background: linear-gradient(135deg, #ff3b30 0%, #cc3128 100%);
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  padding: 10px 18px;
+  font-weight: 800;
+  font-size: 14px;
+  cursor: pointer;
+}
+.ios-hint { display: none; margin-top: 10px; font-size: 13px; color: var(--text); opacity: 0.8; }
+button.whatsapp-float { border: none; cursor: pointer; padding: 0; }
+</style>
+</head>
+<body>
+<div class="app-container">
+<header>
+  <div class="theme-toggle-container" onclick="toggleTheme()" aria-label="Alternar tema"></div>
+
+  <!-- ÁREA PRINCIPAL: Logo ou Foto da Loja -->
+  <div class="logo-section" id="logoSection">
+    <div class="logo-upload-area" id="logoDrop" onclick="document.getElementById('logoInput').click()">
+      <div id="logoPlaceholder" class="logo-placeholder">
+        <span style="font-size:32px">🏪</span>
+        <span style="font-size:15px; font-weight:700; margin-top:8px; color:var(--text)">Logo ou Foto da Loja</span>
+        <small style="font-size:12px; opacity:0.7; margin-top:4px">Toque para adicionar • PNG/JPG</small>
+      </div>
+      <img id="storeLogoPreview" src="" alt="Logo da Loja" style="display:none; max-height:110px; max-width:260px; object-fit:contain; border-radius:12px;">
+    </div>
+    <button type="button" id="removeLogoBtn" onclick="removeLogo()" style="display:none; margin-top:10px; background:none; border:none; color:#ff3b30; font-size:13px; font-weight:600; cursor:pointer;">
+      ✕ Remover
+    </button>
+    <input type="file" id="logoInput" accept="image/*" style="display:none" onchange="loadLogo(this)">
+  </div>
+
+</header>
+
+
+<div class="category-section">
+
+<div class="category-header">
+<label class="category-label">🎯 Tipo de Produto</label>
+<span class="see-more" onclick="toggleCategories()">Ver todos +</span>
+</div>
+<div class="category-grid" id="categoryGrid">
+<!-- Categorias carregadas dinamicamente -->
+</div>
+</div>
+
+<div class="photo-container" id="photoDrop" onclick="document.getElementById('fileInput').click()">
+<div class="photo-placeholder" id="placeholder">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+<circle cx="12" cy="12" r="10" stroke="#b0b0b0" fill="none"/>
+<path d="M12 8v8" stroke="#b0b0b0" stroke-width="2.5" stroke-linecap="round"/>
+<path d="M8 12h8" stroke="#b0b0b0" stroke-width="2.5" stroke-linecap="round"/>
+</svg>
+<p>Adicione a foto do produto</p>
+<small>JPG/PNG • o app ajusta o tamanho</small>
+</div>
+<img id="productImage" src="" alt="Foto do produto">
+</div>
+
+<input type="file" id="fileInput" accept="image/*" style="display:none" onchange="loadProductPhoto(this)">
+
+<div class="form-group">
+<label class="required">💰 Preço (R$)</label>
+<input type="number" id="price" placeholder="Ex: 45" min="0" step="0.01">
+</div>
+
+<div class="form-group">
+<label class="required">📏 Tamanho</label>
+<select id="size">
+<option value="">Selecione o tamanho</option>
+<option value="PP">PP</option>
+<option value="P">P</option>
+<option value="M">M</option>
+<option value="G">G</option>
+<option value="GG">GG</option>
+<option value="XG">XG</option>
+<option value="Único">Único</option>
+<option value="34">34</option>
+<option value="36">36</option>
+<option value="38">38</option>
+<option value="40">40</option>
+<option value="42">42</option>
+<option value="44">44</option>
+<option value="46">46</option>
+<option value="48">48</option>
+</select>
+</div>
+
+<div class="form-group">
+<label>📝 Descrição Profissional</label>
+<textarea id="description" placeholder="Sua descrição será gerada aqui..."></textarea>
+<small style="color:#777; font-size:13px; display:block; margin-top:6px; font-weight:500">
+✨ Descrição otimizada para conversão. Edite se quiser!
+</small>
+</div>
+
+<div class="form-group">
+  <label>🏷️ Tipo de Oferta / Campanha</label>
+  <select id="campaignType" onchange="updateCampaignPreview()">
+    <option value="promocao_relampago|⏰ ÚLTIMA PEÇA">🔥 PROMOÇÃO RELÂMPAGO</option>
+    <option value="oferta_exclusiva|💎 EXCLUSIVO">💎 OFERTA EXCLUSIVA</option>
+    <option value="lancamento|✨ NOVIDADE">✨ LANÇAMENTO PREMIUM</option>
+    <option value="queima_estoque|🔥 ACABANDO">🔥 QUEIMA DE ESTOQUE</option>
+    <option value="oferta_dia|📅 SÓ HOJE">📅 OFERTA DO DIA</option>
+    <option value="ultimas_unidades|⏰ ÚLTIMAS UNIDADES">⏰ ÚLTIMAS UNIDADES</option>
+    <option value="preco_especial|💰 PREÇO ESPECIAL">💰 PREÇO ESPECIAL</option>
+    <option value="frete_gratis|🚚 FRETE GRÁTIS">🚚 FRETE GRÁTIS</option>
+    <option value="black_friday|🖤 BLACK FRIDAY">🖤 BLACK FRIDAY</option>
+    <option value="cyber_monday|💙 CYBER MONDAY">💙 CYBER MONDAY</option>
+    <option value="fim_de_ano|🎄 FIM DE ANO">🎄 OFERTA DE FIM DE ANO</option>
+    <option value="natal|🎅 NATAL">🎅 PROMOÇÃO DE NATAL</option>
+    <option value="ano_novo|🎆 ANO NOVO">🎆 COLEÇÃO ANO NOVO</option>
+    <option value="liquidacao|🏷️ LIQUIDAÇÃO">🏷️ LIQUIDAÇÃO TOTAL</option>
+    <option value="imperdivel|⚡ IMPERDÍVEL">⚡ IMPERDÍVEL</option>
+  </select>
+</div>
+
+<button class="btn-secondary" onclick="generateCopy()">
+✨ GERAR DESCRIÇÃO PROFISSIONAL
+</button>
+
+<button class="btn-primary" id="generateBtn" onclick="generatePanfleto()">
+<span>🔥</span> GERAR PANFLETO
+</button>
+
+
+<div class="preview-container" id="previewContainer">
+  <div id="previewHeader" style="background: linear-gradient(135deg, #ff3b30 0%, #cc3128 100%); padding: 18px 20px; text-align: center; color: white;">
+    <img id="previewLogo" src="" alt="Logo" style="display:none; max-height:70px; max-width:200px; object-fit:contain; margin-bottom:8px; border-radius:8px;">
+
+    <h2 id="previewTitle" style="font-size: 22px; font-weight: 800; margin-bottom: 6px;">PROMOÇÃO RELÂMPAGO</h2>
+    <div id="previewTag" style="background: rgba(255,255,255,0.25); display: inline-block; padding: 5px 16px; border-radius: 30px; font-size: 14px; font-weight: 800; margin-top: 4px;">
+      ⏰ ÚLTIMA PEÇA
+    </div>
+
+  </div>
+
+<div class="preview-image">
+<img id="previewImage" src="" alt="Produto">
+<div class="preview-price" id="previewPrice">R$ 45,00</div>
+</div>
+<div class="preview-desc" id="previewDesc">
+Sua descrição profissional aparecerá aqui...
+</div>
+<div class="preview-footer">
+CHAMA AGORA NO WHATSAPP!
+</div>
+</div>
+
+<!-- Vitrine de produtos adicionados -->
+<div id="vitrineSection" style="display:none; margin-top:24px;">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+    <label class="category-label">🛍️ Vitrine (produtos adicionados)</label>
+    <button type="button" onclick="clearVitrine()" style="background:none; border:none; color:#ff3b30; font-size:13px; font-weight:600; cursor:pointer;">Limpar</button>
+  </div>
+  <div id="vitrineGrid" style="display:grid; grid-template-columns: repeat(4, 1fr); gap:8px;"></div>
+</div>
+
+<div class="share-section" id="shareSection">
+  <button class="share-btn download" onclick="downloadPanfleto(this)" style="padding: 14px 16px; font-size:15px; gap:8px;">
+    <span style="font-size:20px">⬇️</span>
+    BAIXAR PANFLETO / CATÁLOGO
+  </button>
+  <div style="display:flex; gap:10px; margin-top:2px;">
+    <button class="share-btn instagram" onclick="sharePanfleto(this, 'Instagram')" style="flex:1; padding:12px; font-size:12px; gap:6px;">
+      <span style="font-size:18px">📸</span>
+      Instagram
+    </button>
+    <button class="share-btn facebook" onclick="sharePanfleto(this, 'Facebook')" style="flex:1; padding:12px; font-size:12px; gap:6px;">
+      <span style="font-size:18px">📘</span>
+      Facebook
+    </button>
+  </div>
+</div>
+
+<div class="app-footer">
+<p>Panfleto profissional • Cores 100% reais</p>
+<button type="button" id="installBtn" class="install-btn" onclick="installApp()">📲 Instalar app na tela inicial</button>
+<p id="iosHint" class="ios-hint">No iPhone: toque em <b>Compartilhar</b> e depois em <b>Adicionar à Tela de Início</b>.</p>
+<p style="margin-top:6px; font-size:13px">Logo da loja • Download rápido • Pronto para WhatsApp</p>
+
+</div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<button type="button" id="waFloat" class="whatsapp-float" onclick="sharePanfleto(null, 'WhatsApp')" aria-label="Compartilhar no WhatsApp">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.435 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+  </svg>
+</button>
+
+
+
+<script>
+// Sistema de Tema
+function toggleTheme() {
+const currentTheme = document.documentElement.getAttribute('data-theme');
+const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+document.documentElement.setAttribute('data-theme', newTheme);
+localStorage.setItem('theme', newTheme);
+}
+
+// Carregar tema salvo
+document.addEventListener('DOMContentLoaded', () => {
+const savedTheme = localStorage.getItem('theme') || 'light';
+document.documentElement.setAttribute('data-theme', savedTheme);
+});
+
+const $ = id => document.getElementById(id);
+
+let productImage = null;
+let storeLogo = null; // logo da loja (base64)
+let currentCategory = 'blusa_feminina';
+let categoriesExpanded = false;
+const MAX_FILE_SIZE = 15 * 1024 * 1024;
+const STORAGE_KEY = 'panfleto_state_v1';
+
+// Vitrine/catálogo: { image, price, size, description, category, campaign }
+let productHistory = [];
+let cachedBlob = null; // imagem final já pronta (acelera o compartilhamento)
+let prebuildTimer = null;
+
+// ---------- Utilitários ----------
+let toastTimer;
+function toast(msg, ms) {
+  const t = $('toast');
+  if (!t) return;
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), ms || 3800);
+}
+
+function saveAs(blob, name) {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = name;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+}
+
+function readFile(file) {
+  return new Promise(resolve => {
+    const r = new FileReader();
+    r.onload = e => resolve(e.target.result);
+    r.readAsDataURL(file);
+  });
+}
+
+// Reduz a imagem (deixa o app leve e cabe no armazenamento do aparelho)
+function resizeImage(src, maxSide, mime, quality) {
+  return new Promise(resolve => {
+    const img = new Image();
+    img.onload = () => {
+      const r = Math.min(1, maxSide / Math.max(img.width, img.height));
+      const w = Math.max(1, Math.round(img.width * r));
+      const h = Math.max(1, Math.round(img.height * r));
+      const c = document.createElement('canvas');
+      c.width = w; c.height = h;
+      const x = c.getContext('2d');
+      if (mime === 'image/jpeg') { x.fillStyle = '#ffffff'; x.fillRect(0, 0, w, h); }
+      x.drawImage(img, 0, 0, w, h);
+      resolve(c.toDataURL(mime, quality));
+    };
+    img.onerror = () => resolve(src);
+    img.src = src;
+  });
+}
+
+// ---------- Persistência (continua após fechar o app) ----------
+function saveState() {
+  cachedBlob = null;
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      history: productHistory,
+      logo: storeLogo
+    }));
+  } catch (e) {
+    toast('⚠️ Sem espaço para guardar tudo neste aparelho. Remova alguns produtos da vitrine.');
+  }
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    const s = JSON.parse(raw);
+    productHistory = Array.isArray(s.history) ? s.history : [];
+    storeLogo = s.logo || null;
+  } catch (e) { /* ignora estado corrompido */ }
+}
+
+function schedulePrebuild() {
+  clearTimeout(prebuildTimer);
+  prebuildTimer = setTimeout(async () => {
+    if (!productHistory.length) return;
+    try { cachedBlob = await buildPanfletoBlob(); } catch (e) { cachedBlob = null; }
+  }, 700);
+}
+
+// ---------- Logo ----------
+function showLogo() {
+  const has = !!storeLogo;
+  const prev = $('storeLogoPreview');
+  prev.src = has ? storeLogo : '';
+  prev.style.display = has ? 'block' : 'none';
+  $('logoPlaceholder').style.display = has ? 'none' : 'flex';
+  $('removeLogoBtn').style.display = has ? 'inline-block' : 'none';
+}
+
+async function loadLogo(input) {
+  const file = input.files[0];
+  if (!file) return;
+  if (!file.type.match('image.*')) {
+    alert('⚠️ Selecione apenas imagens (JPG, PNG)');
+    return;
+  }
+  if (file.size > MAX_FILE_SIZE) {
+    alert('⚠️ Logo muito grande! Máximo 15MB.');
+    return;
+  }
+  const raw = await readFile(file);
+  storeLogo = await resizeImage(raw, 700, 'image/png');
+  showLogo();
+  saveState();
+  schedulePrebuild();
+}
+
+function removeLogo() {
+  storeLogo = null;
+  showLogo();
+  $('logoInput').value = '';
+  saveState();
+  schedulePrebuild();
+}
+
+// ---------- Vitrine ----------
+function renderVitrine() {
+  const section = $('vitrineSection');
+  const grid = $('vitrineGrid');
+  if (!productHistory.length) {
+    section.style.display = 'none';
+    $('shareSection').classList.remove('active');
+    return;
+  }
+  section.style.display = 'block';
+  grid.innerHTML = '';
+  productHistory.forEach((p, index) => {
+    const item = document.createElement('div');
+    item.style.cssText = 'position:relative; border-radius:12px; overflow:hidden; border:2px solid ' + (index === 0 ? 'var(--primary)' : 'var(--border)') + '; aspect-ratio:1; background:#eee;';
+    item.innerHTML = `
+      <img src="${p.image}" style="width:100%; height:100%; object-fit:cover;">
+      <div style="position:absolute; bottom:0; left:0; right:0; background:rgba(0,0,0,0.75); color:white; font-size:11px; font-weight:700; padding:4px 6px; text-align:center;">
+        R$ ${parseFloat(p.price).toFixed(2).replace('.', ',')}
+      </div>
+      ${index === 0 ? '<div style="position:absolute; top:4px; left:4px; background:#ff3b30; color:white; font-size:10px; font-weight:800; padding:2px 6px; border-radius:6px;">DESTAQUE</div>' : ''}
+      <button type="button" onclick="removeFromVitrine(${index})" title="Remover"
+        style="position:absolute; top:4px; right:4px; width:24px; height:24px; border-radius:50%; border:none; background:rgba(0,0,0,0.7); color:white; font-size:14px; font-weight:800; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0; z-index:2;">
+        ×
+      </button>
+    `;
+    grid.appendChild(item);
+  });
+}
+
+function removeFromVitrine(index) {
+  productHistory.splice(index, 1);
+  saveState();
+  renderVitrine();
+  schedulePrebuild();
+}
+
+function clearVitrine() {
+  if (confirm('Limpar todos os produtos da vitrine?')) {
+    productHistory = [];
+    saveState();
+    renderVitrine();
+    $('previewContainer').classList.remove('active');
+  }
+}
+
+// Banco de dados de CATEGORIAS (30+)
+const categories = [
+{ id: 'blusa_feminina', name: 'Blusa Fem', icon: '👚' },
+{ id: 'calca_feminina', name: 'Calça Fem', icon: '👖' },
+{ id: 'vestido', name: 'Vestido', icon: '👗' },
+{ id: 'saia', name: 'Saia', icon: '🩱' },
+{ id: 'short_feminino', name: 'Short Fem', icon: '🩳' },
+{ id: 'bermuda_feminina', name: 'Bermuda Fem', icon: '🩳' },
+{ id: 'tenis_feminino', name: 'Tênis Fem', icon: '👟' },
+{ id: 'sapato_feminino', name: 'Sapato Fem', icon: '👠' },
+{ id: 'sandalia', name: 'Sandália', icon: '👡' },
+{ id: 'bolsa', name: 'Bolsa', icon: '👜' },
+{ id: 'blusa_masculina', name: 'Blusa Masc', icon: '👕' },
+{ id: 'camisa_social', name: 'Camisa Soc', icon: '👔' },
+{ id: 'calca_masculina', name: 'Calça Masc', icon: '👖' },
+{ id: 'bermuda_masculina', name: 'Bermuda Masc', icon: '🩳' },
+{ id: 'short_masculino', name: 'Short Masc', icon: '🩳' },
+{ id: 'tenis_masculino', name: 'Tênis Masc', icon: '👟' },
+{ id: 'sapato_masculino', name: 'Sapato Masc', icon: '👞' },
+{ id: 'casaco', name: 'Casaco', icon: '🧥' },
+{ id: 'jaqueta', name: 'Jaqueta', icon: '🧥' },
+{ id: 'moletom', name: 'Moletom', icon: '🧥' },
+{ id: 'oculos', name: 'Óculos', icon: '🕶️' },
+{ id: 'relogio', name: 'Relógio', icon: '⌚' },
+{ id: 'mochila', name: 'Mochila', icon: '🎒' },
+{ id: 'bone', name: 'Boné', icon: '🧢' },
+{ id: 'carteira', name: 'Carteira', icon: '👛' },
+{ id: 'brinco', name: 'Brinco', icon: '💍' },
+{ id: 'colar', name: 'Colar', icon: '📿' },
+{ id: 'pijama', name: 'Pijama', icon: '🛏️' },
+{ id: 'cueca', name: 'Cueca', icon: '🩲' },
+{ id: 'meia', name: 'Meia', icon: '🧦' }
+];
+
+// Nomes naturais para o placeholder {tipo}
+const tipoNames = {
+  blusa_feminina: 'blusa feminina',
+  calca_feminina: 'calça feminina',
+  vestido: 'vestido',
+  saia: 'saia',
+  short_feminino: 'short feminino',
+  bermuda_feminina: 'bermuda feminina',
+  tenis_feminino: 'tênis feminino',
+  sapato_feminino: 'sapato feminino',
+  sandalia: 'sandália',
+  bolsa: 'bolsa',
+  blusa_masculina: 'blusa masculina',
+  camisa_social: 'camisa social',
+  calca_masculina: 'calça masculina',
+  bermuda_masculina: 'bermuda masculina',
+  short_masculino: 'short masculino',
+  tenis_masculino: 'tênis masculino',
+  sapato_masculino: 'sapato masculino',
+  casaco: 'casaco',
+  jaqueta: 'jaqueta',
+  moletom: 'moletom',
+  oculos: 'óculos',
+  relogio: 'relógio',
+  mochila: 'mochila',
+  bone: 'boné',
+  carteira: 'carteira',
+  brinco: 'brinco',
+  colar: 'colar',
+  pijama: 'pijama',
+  cueca: 'cueca',
+  meia: 'meia'
+};
+
+// 50 TEMPLATES PROFISSIONAIS
+// Placeholders: {Tipo} (maiúscula), {tipo}, {tamanho}, {preco}
+// Escritos sem concordância de gênero com o produto (usam "peça" quando precisam de adjetivo)
+const copyTemplates = [
+  "🔥 {Tipo} em oferta! Peça de qualidade premium com cores 100% reais. Tamanho {tamanho} por apenas R$ {preco}. Garanta já antes que acabe!",
+  "✨ {Tipo} com preço especial! Tecido de alta qualidade e caimento perfeito. Tamanho {tamanho} por R$ {preco}. Não perca!",
+  "💎 {Tipo} premium! Conforto e estilo em uma só peça. Tamanho {tamanho} - R$ {preco}. Envio rápido!",
+  "🎯 ATENÇÃO! {Tipo} com preço de oferta. Qualidade que você sente no toque. Tamanho {tamanho} por R$ {preco}. Últimas unidades!",
+  "🎁 Presenteie-se: {tipo} com material de primeira e acabamento impecável. Tamanho {tamanho} - apenas R$ {preco}!",
+  "⚡ QUEIMA DE ESTOQUE! {Tipo} com desconto imperdível. Tamanho {tamanho} por R$ {preco}. Corre que acaba rápido!",
+  "🌟 NOVIDADE! {Tipo} que vai arrasar no seu look. Tamanho {tamanho} - R$ {preco}. Qualidade garantida!",
+  "💥 OFERTA RELÂMPAGO! {Tipo} com preço de fábrica. Tamanho {tamanho} por R$ {preco}. Aproveite antes que acabe!",
+  "✨ {Tipo} para qualquer ocasião! Conforto e caimento perfeito. Tamanho {tamanho} - R$ {preco}!",
+  "💚 IMPERDÍVEL! {Tipo} com qualidade premium e preço justo. Tamanho {tamanho} por apenas R$ {preco}. Garanta já!",
+  "✨ DESTAQUE DA SEMANA! {Tipo} com acabamento de primeira. Tamanho {tamanho} - R$ {preco}. Envio imediato!",
+  "🔥 PROMOÇÃO ESPECIAL! {Tipo} que combina com tudo. Conforto e estilo no tamanho {tamanho} por R$ {preco}. Últimas peças!",
+  "💎 PEÇA EXCLUSIVA! {Tipo} com qualidade superior e preço acessível. Tamanho {tamanho} - R$ {preco}!",
+  "⚡ LANÇAMENTO! {Tipo} da nova coleção com preço especial. Material de alta qualidade. Tamanho {tamanho} por R$ {preco}.",
+  "🎁 OFERTA DO DIA! {Tipo} com desconto especial para você. Conforto, estilo e qualidade. Tamanho {tamanho} - apenas R$ {preco}!",
+  "🏆 QUALIDADE GARANTIDA! {Tipo} que você vai amar usar. Acabamento e durabilidade. Tamanho {tamanho} por R$ {preco}.",
+  "💃 ESTILO E CONFORTO! {Tipo} para o dia a dia, com elegância no tamanho {tamanho} por apenas R$ {preco}.",
+  "📱 ÚLTIMA CHAMADA! {Tipo} quase esgotando. Garanta o tamanho {tamanho} por R$ {preco} antes que acabe!",
+  "🌸 TOQUE DE ELEGÂNCIA! {Tipo} para quem tem bom gosto. Tamanho {tamanho} - R$ {preco}. Compre agora!",
+  "🚀 ENTREGA RÁPIDA! {Tipo} de alta qualidade direto para você. Tamanho {tamanho} por R$ {preco}. Peça já!",
+  "🌈 VERSATILIDADE TOTAL! {Tipo} que combina com tudo no seu guarda-roupa. Tamanho {tamanho} por R$ {preco}.",
+  "💖 AMOR À PRIMEIRA VISTA! {Tipo} que você vai querer usar todo dia. Tamanho {tamanho} por apenas R$ {preco}.",
+  "✨ A PEÇA QUE FALTAVA! {Tipo} essencial para o seu dia a dia. Conforto e sofisticação no tamanho {tamanho} por R$ {preco}.",
+  "📈 TREND DO MOMENTO! {Tipo}: peça super desejada e cheia de estilo. Arrase no look com o tamanho {tamanho} por R$ {preco}.",
+  "🍃 LEVE E CONFORTÁVEL! {Tipo} para o dia a dia sem abrir mão da elegância. Tamanho {tamanho} por R$ {preco}.",
+  "✨ PARA MOMENTOS ESPECIAIS! {Tipo} que traz sofisticação e charme. Brilhe no tamanho {tamanho} por apenas R$ {preco}.",
+  "🧵 QUALIDADE QUE DURA! {Tipo} com acabamento reforçado, pensado para durar. Tamanho {tamanho} por R$ {preco}.",
+  "🏆 QUERIDINHO DA CASA! {Tipo} que os clientes mais pedem. Garanta o tamanho {tamanho} por R$ {preco} antes que esgote!",
+  "🎀 PRESENTE PERFEITO! Surpreenda alguém especial com {tipo} cheio de estilo. Tamanho {tamanho} por R$ {preco}.",
+  "☀️ PARA O DIA A DIA! {Tipo}: peça fresca, estilosa e super confortável. Tamanho {tamanho} por apenas R$ {preco}.",
+  "💎 LUXO ACESSÍVEL! {Tipo} com acabamento de grife por um preço que cabe no bolso. Tamanho {tamanho} por R$ {preco}.",
+  "😍 OLHAR QUE CONQUISTA! {Tipo} que vai render elogios no seu look. Tamanho {tamanho} por R$ {preco}.",
+  "✨ CAIMENTO PERFEITO! {Tipo} que valoriza o seu estilo. Tamanho {tamanho} por apenas R$ {preco}.",
+  "🌟 DESTAQUE-SE! {Tipo} para quem ama moda. Tamanho {tamanho} por R$ {preco}.",
+  "⭐ APROVAÇÃO TOTAL! {Tipo} com nota 10 em conforto e estilo. Tamanho {tamanho} por R$ {preco}.",
+  "💚 MUST-HAVE DA ESTAÇÃO! {Tipo} que não pode faltar no seu guarda-roupa. Tamanho {tamanho} por R$ {preco}.",
+  "🔄 RENOVE SEU LOOK! {Tipo} para dar um up no seu estilo. Tamanho {tamanho} por apenas R$ {preco}.",
+  "🌬️ FRESCOR E CONFORTO! {Tipo} para você ficar bem o dia todo. Tamanho {tamanho} por R$ {preco}.",
+  "💼 ELEGÂNCIA NO TRABALHO! {Tipo} para arrasar no ambiente corporativo. Tamanho {tamanho} por R$ {preco}.",
+  "⏰ NÃO DEIXE PARA DEPOIS! {Tipo} com alta procura e poucas unidades. Tamanho {tamanho} por R$ {preco}.",
+  "🎯 PRATICIDADE E ESTILO! {Tipo} fácil de combinar com tudo. Tamanho {tamanho} por apenas R$ {preco}.",
+  "🆕 DESIGN MODERNO! {Tipo} com modelagem atual que valoriza o visual. Tamanho {tamanho} por R$ {preco}.",
+  "👑 NUNCA SAI DE MODA! {Tipo} para investir no seu guarda-roupa. Tamanho {tamanho} por R$ {preco}.",
+  "📸 LOOK DO DIA! {Tipo} para fotos e passeios. Tamanho {tamanho} por apenas R$ {preco}.",
+  "🔑 SELEÇÃO ESPECIAL! Escolha a dedo para você: {tipo}. Tamanho {tamanho} por R$ {preco}.",
+  "🥰 VOCÊ MERECE! {Tipo} para você se sentir bem todos os dias. Tamanho {tamanho} por R$ {preco}.",
+  "📦 ESTOQUE LIMITADO! {Tipo} com poucas peças no tamanho {tamanho}. Garanta por R$ {preco}.",
+  "🔥 ALTA DEMANDA! {Tipo} que está voando da prateleira. Tamanho {tamanho} por apenas R$ {preco}.",
+  "🎁 UM PRESENTE PARA VOCÊ! {Tipo} que une beleza e conforto. Tamanho {tamanho} por R$ {preco}.",
+  "🚨 ÚLTIMA OPORTUNIDADE! {Tipo} com preço especial. Tamanho {tamanho} por R$ {preco}. Chame no WhatsApp agora!"
+];
+
+// ---------- Categorias ----------
+function renderCategories() {
+  const grid = $('categoryGrid');
+  grid.innerHTML = '';
+  grid.style.maxHeight = categoriesExpanded ? '400px' : '170px';
+  const list = categoriesExpanded ? categories : categories.slice(0, 16);
+  list.forEach(cat => {
+    const btn = document.createElement('button');
+    btn.className = 'category-btn' + (cat.id === currentCategory ? ' active' : '');
+    btn.dataset.category = cat.id;
+    btn.innerHTML = `${cat.icon}<br>${cat.name}`;
+    btn.onclick = function () {
+      document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      currentCategory = cat.id;
+      if (productImage) generateCopy();
+    };
+    grid.appendChild(btn);
+  });
+  const more = document.querySelector('.see-more');
+  if (more) more.textContent = categoriesExpanded ? 'Ver menos −' : 'Ver todos +';
+}
+
+function toggleCategories() {
+  categoriesExpanded = !categoriesExpanded;
+  renderCategories();
+}
+
+// ---------- Foto do produto ----------
+async function handlePhotoFile(file) {
+  if (!file) return;
+  if (!file.type.match('image.*')) {
+    alert('⚠️ Selecione apenas imagens (JPG, PNG)');
+    return;
+  }
+  if (file.size > MAX_FILE_SIZE) {
+    alert('⚠️ Imagem muito grande! Máximo 15MB.');
+    return;
+  }
+  const raw = await readFile(file);
+  productImage = await resizeImage(raw, 1000, 'image/jpeg', 0.82);
+  $('productImage').src = productImage;
+  $('productImage').style.display = 'block';
+  $('placeholder').style.display = 'none';
+  setTimeout(generateCopy, 300);
+  $('price').focus();
+}
+
+function loadProductPhoto(input) {
+  handlePhotoFile(input.files[0]);
+}
+
+// ---------- Campanhas ----------
+const campaignLabels = {
+  promocao_relampago: 'PROMOÇÃO RELÂMPAGO',
+  oferta_exclusiva: 'OFERTA EXCLUSIVA',
+  lancamento: 'LANÇAMENTO PREMIUM',
+  queima_estoque: 'QUEIMA DE ESTOQUE',
+  oferta_dia: 'OFERTA DO DIA',
+  ultimas_unidades: 'ÚLTIMAS UNIDADES',
+  preco_especial: 'PREÇO ESPECIAL',
+  frete_gratis: 'FRETE GRÁTIS',
+  black_friday: 'BLACK FRIDAY',
+  cyber_monday: 'CYBER MONDAY',
+  fim_de_ano: 'OFERTA DE FIM DE ANO',
+  natal: 'PROMOÇÃO DE NATAL',
+  ano_novo: 'COLEÇÃO ANO NOVO',
+  liquidacao: 'LIQUIDAÇÃO TOTAL',
+  imperdivel: 'IMPERDÍVEL'
+};
+
+const DEFAULT_COLORS = ['#ff3b30', '#cc3128'];
+const campaignColors = {
+  black_friday: ['#2b2b2e', '#000000'],
+  cyber_monday: ['#007aff', '#0051e0'],
+  fim_de_ano: ['#1e8e3e', '#146c2e'],
+  natal: ['#c62828', '#1b5e20'],
+  ano_novo: ['#5e35b1', '#311b92'],
+  frete_gratis: ['#1e8e3e', '#146c2e']
+};
+
+function campaignInfo(value) {
+  const parts = (value || '').split('|');
+  const key = parts[0] || 'promocao_relampago';
+  return {
+    key: key,
+    title: campaignLabels[key] || 'PROMOÇÃO RELÂMPAGO',
+    tag: parts[1] || '',
+    colors: campaignColors[key] || DEFAULT_COLORS
+  };
+}
+
+// Atualiza título, tag e cor da campanha no preview
+function updateCampaignPreview() {
+  const sel = $('campaignType');
+  if (!sel) return;
+  const info = campaignInfo(sel.value);
+  $('previewTitle').textContent = info.title;
+  $('previewTag').textContent = info.tag;
+  $('previewHeader').style.background = `linear-gradient(135deg, ${info.colors[0]} 0%, ${info.colors[1]} 100%)`;
+}
+
+// ---------- Descrição ----------
+let lastTemplate = -1;
+function generateCopy() {
+  if (!productImage) {
+    alert('⚠️ Adicione uma foto primeiro.');
+    $('fileInput').click();
+    return;
+  }
+
+  const price = $('price').value;
+  const size = $('size').value;
+  const tipo = tipoNames[currentCategory] || 'peça';
+  const Tipo = tipo.charAt(0).toUpperCase() + tipo.slice(1);
+
+  let idx;
+  do { idx = Math.floor(Math.random() * copyTemplates.length); }
+  while (idx === lastTemplate && copyTemplates.length > 1);
+  lastTemplate = idx;
+
+  const selectedCopy = copyTemplates[idx]
+    .replace(/{Tipo}/g, Tipo)
+    .replace(/{tipo}/g, tipo)
+    .replace(/{tamanho}/g, size || '___')
+    .replace(/{preco}/g, price ? parseFloat(price).toFixed(2).replace('.', ',') : '___');
+
+  const descEl = $('description');
+  descEl.value = selectedCopy;
+  descEl.style.borderColor = '#ff3b30';
+  descEl.style.boxShadow = '0 0 0 4px rgba(255, 59, 48, 0.2)';
+  setTimeout(() => {
+    descEl.style.borderColor = '';
+    descEl.style.boxShadow = '';
+  }, 1200);
+}
+
+// ---------- Gerar panfleto (preview + vitrine) ----------
+function generatePanfleto() {
+  const price = $('price').value;
+  const size = $('size').value;
+  let description = $('description').value;
+
+  if (!productImage) {
+    alert('⚠️ Adicione uma foto do produto primeiro.');
+    $('fileInput').click();
+    return;
+  }
+  if (!price || !size) {
+    alert('⚠️ Preencha preço e tamanho.');
+    return;
+  }
+
+  // Descrição vazia ou com lacunas: gera uma nova com preço/tamanho já preenchidos
+  if (!description || description.includes('Sua descrição') || description.includes('{') || description.includes('___')) {
+    generateCopy();
+    description = $('description').value;
+  }
+
+  const campaign = $('campaignType').value;
+  const cleanPrice = String(parseFloat(price) || 0);
+
+  // Preview
+  $('previewImage').src = productImage;
+  $('previewPrice').textContent = 'R$ ' + parseFloat(price).toFixed(2).replace('.', ',');
+  $('previewDesc').textContent = description;
+
+  const previewLogo = $('previewLogo');
+  if (storeLogo) {
+    previewLogo.src = storeLogo;
+    previewLogo.style.display = 'inline-block';
+  } else {
+    previewLogo.style.display = 'none';
+  }
+
+  // Salva na vitrine (cada produto guarda a sua própria campanha)
+  const alreadyExists = productHistory.some(p => p.image === productImage && p.price === cleanPrice && p.size === size);
+  if (!alreadyExists) {
+    productHistory.unshift({
+      image: productImage,
+      price: cleanPrice,
+      size: size,
+      description: description,
+      category: currentCategory,
+      campaign: campaign
+    });
+    if (productHistory.length > 10) productHistory.pop();
+  }
+  saveState();
+  renderVitrine();
+  schedulePrebuild();
+
+  updateCampaignPreview();
+
+  $('previewContainer').classList.add('active');
+  $('shareSection').classList.add('active');
+  $('previewContainer').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+  // Limpa o formulário para o PRÓXIMO produto (o atual já está na vitrine)
+  setTimeout(() => {
+    productImage = null;
+    $('productImage').src = '';
+    $('productImage').style.display = 'none';
+    $('placeholder').style.display = 'block';
+    $('fileInput').value = '';
+    $('price').value = '';
+    $('size').value = '';
+    $('description').value = '';
+    const titleP = $('placeholder').querySelector('p');
+    if (titleP) titleP.textContent = productHistory.length > 0
+      ? 'Adicionar próximo produto'
+      : 'Adicione a foto do produto';
+  }, 400);
+}
+
+// ---------- Imagem final (canvas) ----------
+const CANVAS_FONT = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif';
+const EMOJI_RE = /[\u{1F000}-\u{1FFFF}\u{2190}-\u{21FF}\u{2300}-\u{23FF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}\u{FE0F}\u{200D}]/gu;
+
+function stripEmoji(t) {
+  return String(t || '').replace(EMOJI_RE, '').replace(/\s+/g, ' ').trim();
+}
+
+function loadImg(src) {
+  return new Promise(resolve => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = () => resolve(null);
+    img.src = src;
+  });
+}
+
+function fmtPrice(val) {
+  const n = parseFloat(val);
+  return 'R$ ' + (isNaN(n) ? '0,00' : n.toFixed(2).replace('.', ','));
+}
+
+// Desenha a imagem preenchendo o retângulo, sem distorcer (recorta o excesso)
+function drawCover(ctx, img, x, y, w, h) {
+  const scale = Math.max(w / img.width, h / img.height);
+  const sw = w / scale;
+  const sh = h / scale;
+  ctx.drawImage(img, (img.width - sw) / 2, (img.height - sh) / 2, sw, sh, x, y, w, h);
+}
+
+function wrapLines(ctx, text, maxWidth) {
+  const lines = [];
+  String(text).split('\n').forEach(par => {
+    let line = '';
+    par.split(' ').forEach(word => {
+      const test = line ? line + ' ' + word : word;
+      if (ctx.measureText(test).width > maxWidth && line) {
+        lines.push(line);
+        line = word;
+      } else {
+        line = test;
+      }
+    });
+    lines.push(line);
+  });
+  return lines;
+}
+
+// Escreve o texto dentro de uma caixa: reduz a fonte e, se ainda não couber, corta com "…"
+function drawFittedText(ctx, text, x, y, maxWidth, maxHeight) {
+  let size = 44;
+  const minSize = 28;
+  let lines;
+  let lh;
+  for (;;) {
+    ctx.font = `bold ${size}px ${CANVAS_FONT}`;
+    lines = wrapLines(ctx, text, maxWidth);
+    lh = Math.round(size * 1.28);
+    if (lines.length * lh <= maxHeight || size <= minSize) break;
+    size -= 2;
+  }
+  const maxLines = Math.max(1, Math.floor(maxHeight / lh));
+  if (lines.length > maxLines) {
+    lines = lines.slice(0, maxLines);
+    let last = lines[maxLines - 1];
+    while (last.length > 1 && ctx.measureText(last + '…').width > maxWidth) last = last.slice(0, -1);
+    lines[maxLines - 1] = last.trimEnd() + '…';
+  }
+  ctx.textBaseline = 'top';
+  lines.forEach((l, i) => ctx.fillText(l, x, y + i * lh));
+  ctx.textBaseline = 'alphabetic';
+}
+
+function drawPriceBadge(ctx, text, bx, by) {
+  ctx.font = 'bold 48px Arial, sans-serif';
+  const pw = ctx.measureText(text).width;
+  const padX = 28;
+  const badgeW = pw + padX * 2;
+  const badgeH = 64;
+  ctx.fillStyle = 'rgba(0,0,0,0.90)';
+  ctx.fillRect(bx, by, badgeW, badgeH);
+  ctx.strokeStyle = 'rgba(255,255,255,0.25)';
+  ctx.lineWidth = 3;
+  ctx.strokeRect(bx, by, badgeW, badgeH);
+  ctx.fillStyle = '#FFFFFF';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(text, bx + padX, by + badgeH / 2);
+  ctx.textBaseline = 'alphabetic';
+}
+
+// Monta o PNG (1080x1920): panfleto individual ou catálogo, sempre a partir da vitrine
+async function buildPanfletoBlob() {
+  const products = productHistory.slice();
+  if (!products.length) return null;
+
+  const W = 1080, H = 1920;
+  const isCatalog = products.length > 1;
+  const featured = products[0];
+  const info = campaignInfo(featured.campaign);
+  const colors = isCatalog ? DEFAULT_COLORS : info.colors;
+
+  const canvas = document.createElement('canvas');
+  canvas.width = W;
+  canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, W, H);
+
+  // Carrega as imagens antes de calcular o layout
+  const featImg = await loadImg(featured.image);
+  const logoImg = storeLogo ? await loadImg(storeLogo) : null;
+  const others = [];
+  if (isCatalog) {
+    for (const p of products.slice(1)) {
+      const img = await loadImg(p.image);
+      if (img) others.push({ img: img, price: p.price });
+    }
+  }
+
+  // Cabeçalho
+  const headerHeight = logoImg ? 380 : 240;
+  const gradient = ctx.createLinearGradient(0, 0, 0, headerHeight);
+  gradient.addColorStop(0, colors[0]);
+  gradient.addColorStop(1, colors[1]);
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, W, headerHeight);
+
+  if (logoImg) {
+    const ratio = Math.min(900 / logoImg.width, 200 / logoImg.height);
+    const lw = logoImg.width * ratio;
+    const lh = logoImg.height * ratio;
+    ctx.drawImage(logoImg, (W - lw) / 2, 25, lw, lh);
+  }
+
+  ctx.fillStyle = 'white';
+  ctx.textAlign = 'center';
+  ctx.font = `bold 52px ${CANVAS_FONT}`;
+  ctx.fillText(isCatalog ? 'CATÁLOGO DE OFERTAS' : info.title, W / 2, logoImg ? 280 : 120);
+
+  ctx.font = `bold 32px ${CANVAS_FONT}`;
+  ctx.fillStyle = 'rgba(255,255,255,0.9)';
+  let subTitle = isCatalog ? (products.length + ' PEÇAS SELECIONADAS') : stripEmoji(info.tag);
+  if (subTitle === info.title) subTitle = ''; // evita repetir o título (ex.: Black Friday)
+  if (subTitle) ctx.fillText(subTitle, W / 2, logoImg ? 335 : 180);
+
+  // Produto destaque
+  const rows = Math.ceil(others.length / (others.length > 6 ? 4 : 3));
+  let featBottom = headerHeight + 40;
+  if (featImg) {
+    const maxW = isCatalog ? 720 : 980;
+    const maxH = isCatalog ? (rows <= 1 ? 560 : rows === 2 ? 430 : 330) : 800;
+    const ratio = Math.min(maxW / featImg.width, maxH / featImg.height);
+    const w = featImg.width * ratio;
+    const h = featImg.height * ratio;
+    const x = (W - w) / 2;
+    const y = headerHeight + 20;
+    ctx.drawImage(featImg, x, y, w, h);
+    featBottom = y + h;
+    drawPriceBadge(ctx, fmtPrice(featured.price), x + 12, y + h - 76);
+  }
+
+  // Demais produtos: grade que sempre cabe acima do rodapé
+  if (others.length > 0) {
+    const cols = others.length > 6 ? 4 : 3;
+    const gap = 18;
+    const sidePad = 40;
+    const priceH = 38;
+    const startY = featBottom + 28;
+    const availH = 1700 - startY;
+    const baseThumb = Math.floor((W - sidePad * 2 - gap * (cols - 1)) / cols);
+    const fitThumb = Math.floor((availH - rows * (priceH + gap)) / rows);
+    const thumb = Math.max(120, Math.min(baseThumb, fitThumb));
+    const startX = Math.round((W - (cols * thumb + gap * (cols - 1))) / 2);
+
+    others.forEach((item, i) => {
+      const col = i % cols;
+      const row = Math.floor(i / cols);
+      const tx = startX + col * (thumb + gap);
+      const ty = startY + row * (thumb + priceH + gap);
+      ctx.fillStyle = '#111111';
+      ctx.fillRect(tx - 2, ty - 2, thumb + 4, thumb + priceH + 2);
+      drawCover(ctx, item.img, tx, ty, thumb, thumb);
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = 'bold 26px Arial, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(fmtPrice(item.price), tx + thumb / 2, ty + thumb + priceH / 2);
+      ctx.textBaseline = 'alphabetic';
+    });
+  }
+
+  // Descrição (só no panfleto individual)
+  if (!isCatalog) {
+    ctx.fillStyle = '#f9f9f9';
+    ctx.fillRect(0, 1320, W, 380);
+    ctx.fillStyle = '#1c1c1e';
+    ctx.textAlign = 'left';
+    drawFittedText(ctx, featured.description || '', 60, 1350, 960, 320);
+  }
+
+  // Rodapé
+  ctx.fillStyle = '#1c1c1e';
+  ctx.fillRect(0, 1720, W, 200);
+  ctx.fillStyle = 'white';
+  ctx.textAlign = 'center';
+  ctx.font = `bold 48px ${CANVAS_FONT}`;
+  ctx.fillText('CHAMA AGORA NO WHATSAPP!', W / 2, 1835);
+
+  return await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+}
+
+function panfletoFileName() {
+  const kind = productHistory.length > 1 ? 'catalogo-' : 'oferta-';
+  return kind + new Date().toISOString().replace(/[:.]/g, '-') + '.png';
+}
+
+async function withBusyButton(btn, fn) {
+  const original = btn ? btn.innerHTML : '';
+  if (btn) { btn.innerHTML = '⏳ Gerando...'; btn.disabled = true; }
+  try {
+    await fn();
+  } catch (err) {
+    console.error(err);
+    alert('Erro ao gerar a imagem. Tente novamente.');
+  } finally {
+    if (btn) { btn.innerHTML = original; btn.disabled = false; }
+  }
+}
+
+// ---------- Baixar / Compartilhar ----------
+async function downloadPanfleto(btn) {
+  if (!productHistory.length) {
+    toast('⚠️ Gere o panfleto primeiro.');
+    return;
+  }
+  await withBusyButton(btn, async () => {
+    const blob = cachedBlob || await buildPanfletoBlob();
+    saveAs(blob, panfletoFileName());
+    toast(productHistory.length > 1
+      ? '✅ Catálogo com ' + productHistory.length + ' produtos baixado!'
+      : '✅ Panfleto baixado com sucesso!');
+  });
+}
+
+const shareTips = {
+  WhatsApp: 'Abra o WhatsApp, toque no clipe 📎 e escolha a imagem salva.',
+  Instagram: 'Abra o Instagram, toque em "+" e escolha a imagem salva.',
+  Facebook: 'Abra o Facebook, toque em "Foto" e escolha a imagem salva.'
+};
+
+async function sharePanfleto(btn, appName) {
+  if (!productHistory.length) {
+    toast('⚠️ Gere o panfleto primeiro.');
+    return;
+  }
+  if (!cachedBlob) toast('⏳ Preparando a imagem...', 2500);
+  await withBusyButton(btn, async () => {
+    const blob = cachedBlob || await buildPanfletoBlob();
+    const file = new File([blob], panfletoFileName(), { type: 'image/png' });
+
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      try {
+        await navigator.share({ files: [file] });
+        return;
+      } catch (e) {
+        if (e && e.name === 'AbortError') return; // pessoa cancelou
+        // outro erro: cai para o download
+      }
+    }
+    saveAs(blob, file.name);
+    toast('✅ Imagem salva! ' + (shareTips[appName] || ''), 6000);
+  });
+}
+
+// ---------- Arrastar e soltar ----------
+function setupDragDrop() {
+  const drop = $('photoDrop');
+  drop.addEventListener('dragover', e => {
+    e.preventDefault();
+    drop.style.borderColor = '#ff3b30';
+    drop.style.backgroundColor = '#fff5f5';
+  });
+  drop.addEventListener('dragleave', () => {
+    drop.style.borderColor = '';
+    drop.style.backgroundColor = '';
+  });
+  drop.addEventListener('drop', e => {
+    e.preventDefault();
+    drop.style.borderColor = '';
+    drop.style.backgroundColor = '';
+    handlePhotoFile(e.dataTransfer.files[0]);
+  });
+}
+
+// ---------- Instalar como app (PWA) ----------
+let deferredInstall = null;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredInstall = e;
+  $('installBtn').style.display = 'inline-block';
+});
+window.addEventListener('appinstalled', () => {
+  deferredInstall = null;
+  $('installBtn').style.display = 'none';
+  toast('✅ App instalado na tela inicial!');
+});
+
+async function installApp() {
+  if (!deferredInstall) return;
+  deferredInstall.prompt();
+  await deferredInstall.userChoice;
+  deferredInstall = null;
+  $('installBtn').style.display = 'none';
+}
+
+if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  });
+}
+
+// ---------- Início ----------
+document.addEventListener('DOMContentLoaded', () => {
+  loadState();
+  renderCategories();
+  showLogo();
+  renderVitrine();
+
+  updateCampaignPreview();
+  setupDragDrop();
+
+  if (productHistory.length) {
+    $('shareSection').classList.add('active');
+    schedulePrebuild();
+  }
+
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const standalone = window.navigator.standalone || (window.matchMedia && matchMedia('(display-mode: standalone)').matches);
+  if (isIOS && !standalone) $('iosHint').style.display = 'block';
+});
+
+</script>
+</body>
+</html>
